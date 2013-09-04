@@ -2,6 +2,11 @@ App.Store = DS.Store.extend({
   adapter: DS.FixtureAdapter
 });
 
+// Enable pushState
+// App.Router.reopen({
+//   location: 'history'
+// });
+
 App.Router.map(function() {
   this.resource('responders', {path: '/responders'});
   this.resource('account', {path: '/account'});
