@@ -62,5 +62,17 @@ App.Responder.FIXTURES = [
     name: 'Just Responded',
     message: 'I am available',
     status: 0
-  }
+  },
+  {
+    id: 5,
+    name: 'Someone Else',
+    message: 'I won\'t be there',
+    status: 0
+  },
+  {
+    id: 6,
+    name: 'Someone Else',
+    message: 'I won\'t be there',
+    status: 0
+  },
 ];

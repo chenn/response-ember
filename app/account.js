@@ -1,6 +1,17 @@
 App.AccountRoute = Ember.Route.extend({
   model: function() {
     return this.store.find('account', 0);
+  },
+  renderTemplate: function() {
+    this.render();  // Render account template
+    this.render('account-basic-info', {
+      into: 'account',
+      outlet: 'basicInfo'
+    });
+    this.render('account-oot', {
+      into: 'account',
+      outlet: 'outOfTown'
+    });
   }
 });
 
@@ -14,8 +25,21 @@ App.AccountController = Ember.ObjectController.extend({
       this.get('model').save();
     }
   },
-  isEditingBasicInfo: false
+  isEditingBasicInfo: false,
+  ootOptions: [
+    {text: 'Yes', val: true},
+    {text: 'No', val: false}
+  ],
+  oot: false
 });
+
+App.EditInfoView = Ember.TextField.extend({
+  didInsertElement: function() {
+    this.$().focus;
+  }
+});
+
+Ember.Handlebars.helper('edit-info', App.EditInfoView);
 
 App.Account = DS.Model.extend({
   firstName: DS.attr('string'),
@@ -31,11 +55,3 @@ App.Account.FIXTURES = [
     email: 'email@foo.net'
   }
 ];
-
-App.EditInfoView = Ember.TextField.extend({
-  didInsertElement: function() {
-    this.$().focus;
-  }
-});
-
-Ember.Handlebars.helper('edit-info', App.EditInfoView);
