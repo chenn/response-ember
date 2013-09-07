@@ -1,6 +1,9 @@
 # Node
 node_modules
 
+# RethinkDB
+rethinkdb_data
+
 # Vim
 *.swp
 *.swo
