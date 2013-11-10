@@ -1,0 +1,13 @@
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="navbar-header">
+        {{#link-to "incident" classNames="navbar-brand"}}RESPONSE{{/link-to}}
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+        <li>{{#link-to "account"}}Account{{/link-to}}</li>
+        <li><a href="">Log Out</a></li>
+    </ul>
+</nav>
+
+<div id="main">
+    {{outlet}}
+</div>

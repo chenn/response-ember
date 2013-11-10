@@ -1,0 +1,28 @@
+<div class="panel panel-info basic-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Basic Info
+            <span class="glyphicon glyphicon-pencil" {{action "editBasicInfo" on="click"}}></span>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            {{#if isEditingBasicInfo}}
+            <li class="names">
+                {{edit-info class="form-control" value=firstName focus-out="acceptChanges" insert-newline="acceptChanges"}}
+                {{edit-info class="form-control" value=lastName focus-out="acceptChanges" insert-newline="acceptChanges"}}
+            </li>
+            <li>
+                {{edit-info class="form-control" value=email focus-out="acceptChanges" insert-newline="acceptChanges"}}
+            </li>
+            {{else}}
+            <li>
+                {{firstName}} {{lastName}}
+            </li>
+            <li>
+                {{email}}
+            </li>
+            {{/if}}
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="panel panel-warning out-of-town">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Out of Town Status
+        </h3>
+    </div>
+    <div class="panel-body">
+        {{view Ember.Select 
+        contentBinding="ootOptions"
+        optionValuePath="content.val"
+        optionLabelPath="content.text"
+        valueBinding="oot"}}
+        {{#if oot}}
+        {{date-range controller=App.AccountController}}
+        {{edit-info class="form-control" value=ootMessage focus-out="acceptChanges" insert-newline="acceptChanges" placeholder="Leave a message..."}}
+        {{/if}}
+    </div>
+</div>
