@@ -27,19 +27,10 @@ App.AccountController = Ember.ObjectController.extend({
   },
   isEditingBasicInfo: false,
   ootOptions: [
-    {text: 'Yes', val: true},
-    {text: 'No', val: false}
-  ],
-  oot: false
+    {text: 'No', val: false},
+    {text: 'Yes', val: true}
+  ]
 });
-
-App.EditInfoView = Ember.TextField.extend({
-  didInsertElement: function() {
-    this.$().focus;
-  }
-});
-
-Ember.Handlebars.helper('edit-info', App.EditInfoView);
 
 App.Account = DS.Model.extend({
   firstName: DS.attr('string'),
@@ -52,6 +43,7 @@ App.Account.FIXTURES = [
     id: 0,
     firstName: 'Chris',
     lastName: 'Henn',
-    email: 'email@foo.net'
+    email: 'email@foo.net',
+    oot: false
   }
 ];

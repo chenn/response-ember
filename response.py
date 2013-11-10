@@ -24,45 +24,68 @@ def setup_db():
         connection.close()
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 app.config.from_object(__name__)
+
+
+@app.before_request
+def before_request():
+    try:
+        g.rdb_conn = r.connect(host=RDB_HOST, port=RDB_PORT, db=APP_DB)
+    except RqlDriverError:
+        abort(503, "No database connection could be established")
+
+@app.teardown_request
+def teardown_request(exception):
+    try:
+        g.rdb_conn.close()
+    except AttributeError:
+        pass
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
-@app.route('/responders', methods=['GET'])
-def get_responders():
-    return
+@app.route('/incident', methods=['GET'])
+def get_current_incident():
+    incident = list(r.table('incidents').filter({'isCurrentIncident': True}).run(g.rdb_conn))[0]
+    for response in incident['responses']:
+        response['user'] = r.table('accounts').get(response['user']).pluck('firstName', 'lastName').run(g.rdb_conn)
+    return jsonify(incident)
 
-@app.route('/responders', methods=['POST'])
-def new_response_list():
-    return
+# @app.route('/incident', methods=['POST'])
+# def new_incident():
+#     return
 
-@app.route('/responders', methods=['PATCH'])
-def update_responders():
-    return
+# @app.route('/incident', methods=['PATCH'])
+# def update_incident():
+#     return
 
-@app.route('/responders', methods=['DELETE'])
-def remove_response_list():
-    return
+# @app.route('/incident', methods=['DELETE'])
+# def remove_incident():
+#     return
 
 @app.route('/account', methods=['GET'])
 def get_account():
-    return
-
-@app.route('/account', methods=['POST'])
-def new_account():
-    return
+    account = r.table('accounts').get('477d269c-cb2a-4a21-ab2e-32055068e016').run(g.rdb_conn)
+    return jsonify(account)
 
 @app.route('/account', methods=['PATCH'])
 def update_account():
-    return
+    return jsonify(r.table('accounts').get('477d269c-cb2a-4a21-ab2e-32055068e016').update(request.json).run(g.rdb_conn))
 
-@app.route('/account', methods=['DELETE'])
-def remove_account():
-    return
+# @app.route('/account', methods=['POST'])
+# def new_account():
+#     return
+
+# @app.route("/account/<string:id>", methods=['GET'])
+# def get_account_by_id(id):
+#     return jsonify(r.table('accounts').get(id).run(g.rdb_conn))
+
+# @app.route("/account/<string:id>", methods=['DELETE'])
+# def remove_account(id):
+#     return jsonify(r.table('accounts').get(id).delete().run(g.rdb_conn))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run the response app')

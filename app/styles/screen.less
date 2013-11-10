@@ -41,8 +41,25 @@
 }
 
 .out-of-town {
+    select {
+        display: block;
+        margin: 10px 0;
+    }
     input {
         margin: 10px 0;
-        width: 60%;
+        width: 92%;
     }
+    .date {
+        display: inline;
+        width: 150px;
+        margin-right: 5px;
+    }
+}
+
+input.error {
+    border-color: #b94a48;
+}
+
+input.success {
+    border-color: #468847;
 }
