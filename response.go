@@ -5,6 +5,7 @@ import (
     "net/http"
     "log"
     "github.com/gorilla/mux"
+    "code.google.com/p/go.crypto/bcrypt"
     r "github.com/dancannon/gorethink"
 )
 
@@ -58,6 +59,7 @@ func main() {
 
     // Routes
     router.HandleFunc("/api/account", AccountHandler).Methods("GET")
+    router.HandleFunc("/api/account", NewAccountHandler).Methods("POST")
     router.HandleFunc("/api/incidents", IncidentsHandler).Methods("GET")
     router.HandleFunc("/api/incidents/{id}", IncidentHandler).Methods("GET")
     router.HandleFunc("/api/incidents/{id}/responses", ResponsesHandler).Methods("GET")
@@ -80,6 +82,17 @@ func AccountHandler(resp http.ResponseWriter, req *http.Request) {
     j, _ := json.Marshal(acc)
     resp.Header().Set("Content-Type", "application/json")
     resp.Write(j)
+}
+
+func NewAccountHandler(resp http.ResponseWriter, req *http.Request) {
+    pw, err := bcrypt.GenerateFromPassword([]byte(req.FormValue("password")), 10)
+    if err != nil {
+        http.Error(resp, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    log.Println("Create account")
+    log.Println(pw)
+    http.Redirect(resp, req, "/signup.html", http.StatusFound)
 }
 
 func IncidentsHandler(resp http.ResponseWriter, req *http.Request) {

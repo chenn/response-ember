@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sign Up</title>
+
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="styles/screen.css">
+</head>
+<body>
+  <form id="signup-form" action="/api/account" method="POST">
+      <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+      </div>
+      <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="A unique, strong password">
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+
+  <script src="lib/jquery-2.0.3.min.js"></script>
+</body>
+</html>
