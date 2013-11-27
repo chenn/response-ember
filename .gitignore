@@ -4,6 +4,9 @@ node_modules
 # RethinkDB
 rethinkdb_data
 
+# Built by Grunt
+static
+
 # Vim
 *.swp
 *.swo
