@@ -35,6 +35,10 @@ type Response struct {
 type OptArgs map[string]interface{}
 
 var session *r.Session
+const (
+    accountId = "477d269c-cb2a-4a21-ab2e-32055068e016"
+    orgId = "1236c86b-2330-47ff-8697-abdf89a48a9d"
+)
 
 func main() {
     log.Println("Starting server")
@@ -66,7 +70,7 @@ func main() {
 
 func AccountHandler(resp http.ResponseWriter, req *http.Request) {
     var acc Account
-    row, _ := r.Table("accounts").Get("477d269c-cb2a-4a21-ab2e-32055068e016").RunRow(session)
+    row, _ := r.Table("accounts").Get(accountId).RunRow(session)
     if row.IsNil() {
         http.NotFound(resp, req)
         return
@@ -74,60 +78,58 @@ func AccountHandler(resp http.ResponseWriter, req *http.Request) {
     row.Scan(&acc)
 
     j, _ := json.Marshal(acc)
-
     resp.Header().Set("Content-Type", "application/json")
     resp.Write(j)
 }
 
 func IncidentsHandler(resp http.ResponseWriter, req *http.Request) {
-    incidents := []Incident{}
-    rows, _ := r.Table("incidents").Filter(OptArgs{"organizationId": "1236c86b-2330-47ff-8697-abdf89a48a9d"}).Run(session)
-
-    for rows.Next() {
-        var incident Incident
-        rows.Scan(&incident)
-        incidents = append(incidents, incident)
-    }
+    incidents := getIncidents(orgId)
 
     j, _ := json.Marshal(incidents)
-
     resp.Header().Set("Content-Type", "application/json")
     resp.Write(j)
 }
 
 func IncidentHandler(resp http.ResponseWriter, req *http.Request) {
-    vars := mux.Vars(req)
-    id := vars["id"]
-
-    var incident Incident
-    row, _ := r.Table("incidents").Get(id).RunRow(session)
-    if row.IsNil() {
-        http.NotFound(resp, req)
-        return
-    }
-    row.Scan(&incident)
+    id := mux.Vars(req)["id"]
+    incident := getIncident(id)
 
     j, _ := json.Marshal(incident)
-
     resp.Header().Set("Content-Type", "application/json")
     resp.Write(j)
 }
 
 func ResponsesHandler(resp http.ResponseWriter, req *http.Request) {
-    vars := mux.Vars(req)
-    incidentId := vars["id"]
+    incidentId := mux.Vars(req)["id"]
+    responses := getResponses(incidentId)
 
-    responses := []Response{}
-    rows, _ := r.Table("responses").Filter(OptArgs{"incidentId": incidentId}).Run(session)
+    j, _ := json.Marshal(responses)
+    resp.Header().Set("Content-Type", "application/json")
+    resp.Write(j)
+}
 
+func getIncidents(id string) (is []Incident) {
+    rows, _ := r.Table("incidents").Filter(OptArgs{"organizationId": id}).Run(session)
+    for rows.Next() {
+        var incident Incident
+        rows.Scan(&incident)
+        is = append(is, incident)
+    }
+    return
+}
+
+func getIncident(id string) (i Incident) {
+    row, _ := r.Table("incidents").Get(id).RunRow(session)
+    row.Scan(&i)
+    return
+}
+
+func getResponses(id string) (rs []Response) {
+    rows, _ := r.Table("responses").Filter(OptArgs{"incidentId": id}).Run(session)
     for rows.Next() {
         var response Response
         rows.Scan(&response)
-        responses = append(responses, response)
+        rs = append(rs, response)
     }
-
-    j, _ := json.Marshal(responses)
-
-    resp.Header().Set("Content-Type", "application/json")
-    resp.Write(j)
+    return
 }
