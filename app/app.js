@@ -9,7 +9,6 @@ App.Store = DS.Store.extend({
 
 App.Router.map(function() {
   this.resource('incident', {path: '/incident'});
-  this.resource('account', {path: '/account'});
 });
 
 App.IndexRoute = Ember.Route.extend({
@@ -18,28 +17,28 @@ App.IndexRoute = Ember.Route.extend({
   }
 });
 
-App.DateRangeComponent = Ember.Component.extend({
-  actions: {
-    acceptChanges: function() {
-      start = new Date(this.get('start'));
-      end = new Date(this.get('end'));
-      if (isNaN(start)) {
-        this.$('.start.date').addClass('error');
-      }
-      else if (isNaN(end)) {
-        this.$('.end.date').addClass('error');
-      }
-      else {
-        this.$('.date').removeClass('error');
-        this.set('startDate', start);
-        this.set('endDate', end);
-        this.set('start', start.toDateString().slice(4));
-        this.set('end', end.toDateString().slice(4));
-      }
-    }
-  }
-});
+// App.DateRangeComponent = Ember.Component.extend({
+//   actions: {
+//     acceptChanges: function() {
+//       start = new Date(this.get('start'));
+//       end = new Date(this.get('end'));
+//       if (isNaN(start)) {
+//         this.$('.start.date').addClass('error');
+//       }
+//       else if (isNaN(end)) {
+//         this.$('.end.date').addClass('error');
+//       }
+//       else {
+//         this.$('.date').removeClass('error');
+//         this.set('startDate', start);
+//         this.set('endDate', end);
+//         this.set('start', start.toDateString().slice(4));
+//         this.set('end', end.toDateString().slice(4));
+//       }
+//     }
+//   }
+// });
 
-App.EditInfoView = Ember.TextField.extend({});
+// App.EditInfoView = Ember.TextField.extend({});
 
-Ember.Handlebars.helper('edit-info', App.EditInfoView);
+// Ember.Handlebars.helper('edit-info', App.EditInfoView);
